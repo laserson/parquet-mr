@@ -30,6 +30,9 @@ mvn test
 to build the jars:
 mvn package
 
+if you want to use Hadoop 2, then specify the hadoop.version property:
+mvn package -Dhadoop.version=2
+
 The build runs in [Travis CI](http://travis-ci.org/Parquet/parquet-mr):
 [![Build Status](https://secure.travis-ci.org/Parquet/parquet-mr.png?branch=master)](http://travis-ci.org/Parquet/parquet-mr)
 
