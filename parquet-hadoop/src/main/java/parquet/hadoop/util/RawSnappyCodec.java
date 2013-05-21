@@ -45,7 +45,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionOutputStream createOutputStream(OutputStream out,
       Compressor compressor) throws IOException {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
     return new CompressorStream(out, compressor, bufferSize);
   }
 
@@ -56,7 +56,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Compressor createCompressor() {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
     return new SnappyCompressor(bufferSize);
   }
 
@@ -69,7 +69,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionInputStream createInputStream(InputStream in,
       Decompressor decompressor) throws IOException {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
     return new DecompressorStream(in, decompressor, bufferSize);
   }
 
@@ -80,7 +80,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Decompressor createDecompressor() {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
     return new SnappyDecompressor(bufferSize);
   }
 
