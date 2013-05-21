@@ -6,9 +6,6 @@ import java.io.OutputStream;
 
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.io.compress.BlockCompressorStream;
-import org.apache.hadoop.io.compress.BlockDecompressorStream;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionInputStream;
 import org.apache.hadoop.io.compress.CompressionOutputStream;
@@ -16,7 +13,6 @@ import org.apache.hadoop.io.compress.Compressor;
 import org.apache.hadoop.io.compress.CompressorStream;
 import org.apache.hadoop.io.compress.Decompressor;
 import org.apache.hadoop.io.compress.DecompressorStream;
-import org.apache.hadoop.io.compress.snappy.LoadSnappy;
 import org.apache.hadoop.io.compress.snappy.SnappyCompressor;
 import org.apache.hadoop.io.compress.snappy.SnappyDecompressor;
 
