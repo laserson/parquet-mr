@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
 import parquet.avro.AvroParquetOutputFormat;
 import parquet.avro.AvroSchemaConverter;
@@ -51,6 +52,11 @@ public class Avro2Parquet extends Configured implements Tool {
     job.setNumReduceTasks(0);
 
     return job.waitForCompletion(true) ? 0 : 1;
+  }
+  
+  public static void main(String[] args) throws Exception {
+    int exitCode = ToolRunner.run(new Avro2Parquet(), args);
+    System.exit(exitCode);
   }
 
 }
