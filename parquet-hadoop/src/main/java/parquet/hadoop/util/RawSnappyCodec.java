@@ -20,6 +20,7 @@ import org.apache.hadoop.io.compress.snappy.LoadSnappy;
 import org.apache.hadoop.io.compress.snappy.SnappyCompressor;
 import org.apache.hadoop.io.compress.snappy.SnappyDecompressor;
 
+import parquet.hadoop.ParquetOutputFormat;
 import parquet.hadoop.ParquetWriter;
 
 public class RawSnappyCodec implements Configurable, CompressionCodec {
@@ -48,7 +49,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionOutputStream createOutputStream(OutputStream out,
       Compressor compressor) throws IOException {
-    int bufferSize = 168 * 1024 * 1024;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
     return new CompressorStream(out, compressor, bufferSize);
   }
 
@@ -59,7 +60,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Compressor createCompressor() {
-    int bufferSize = 168 * 1024 * 1024;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
     return new SnappyCompressor(bufferSize);
   }
 
@@ -72,7 +73,8 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionInputStream createInputStream(InputStream in,
       Decompressor decompressor) throws IOException {
-    return new DecompressorStream(in, decompressor, 168 * 1024 * 1024);
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
+    return new DecompressorStream(in, decompressor, bufferSize);
   }
 
   @Override
@@ -82,7 +84,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Decompressor createDecompressor() {
-    int bufferSize = 168 * 1024 * 1024;
+    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 2;
     return new SnappyDecompressor(bufferSize);
   }
 
