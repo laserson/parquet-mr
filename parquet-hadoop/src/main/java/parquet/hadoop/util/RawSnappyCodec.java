@@ -20,6 +20,11 @@ import parquet.hadoop.ParquetOutputFormat;
 import parquet.hadoop.ParquetWriter;
 
 public class RawSnappyCodec implements Configurable, CompressionCodec {
+  public static final String SNAPPY_STREAM_BUFFER_SIZE_KEY = "snappy.stream.buffer.size";
+  /* What should the right size be?  I'd expect it should be tied to the page size, but setting
+   * it too small can cause some map tasks to fail. */
+  public static final int DEFAULT_SNAPPY_STREAM_BUFFER_SIZE = 10 * ParquetWriter.DEFAULT_PAGE_SIZE;
+
   Configuration conf;
 
   @Override
@@ -45,7 +50,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionOutputStream createOutputStream(OutputStream out,
       Compressor compressor) throws IOException {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
+    int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
     return new CompressorStream(out, compressor, bufferSize);
   }
 
@@ -56,7 +61,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Compressor createCompressor() {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
+    int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
     return new SnappyCompressor(bufferSize);
   }
 
@@ -69,7 +74,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   @Override
   public CompressionInputStream createInputStream(InputStream in,
       Decompressor decompressor) throws IOException {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
+    int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
     return new DecompressorStream(in, decompressor, bufferSize);
   }
 
@@ -80,7 +85,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
 
   @Override
   public Decompressor createDecompressor() {
-    int bufferSize = conf.getInt(ParquetOutputFormat.PAGE_SIZE, ParquetWriter.DEFAULT_PAGE_SIZE) * 3;
+    int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
     return new SnappyDecompressor(bufferSize);
   }
 
