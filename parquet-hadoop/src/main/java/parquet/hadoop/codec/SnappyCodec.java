@@ -10,24 +10,24 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionInputStream;
 import org.apache.hadoop.io.compress.CompressionOutputStream;
 import org.apache.hadoop.io.compress.Compressor;
-import org.apache.hadoop.io.compress.CompressorStream;
 import org.apache.hadoop.io.compress.Decompressor;
 import org.apache.hadoop.io.compress.DecompressorStream;
 import org.apache.hadoop.io.compress.snappy.SnappyCompressor;
 import org.apache.hadoop.io.compress.snappy.SnappyDecompressor;
 
 import parquet.hadoop.ParquetWriter;
+// SWITCH
 
 /**
  * This class creates stream snappy compressors/decompressors (rather than block codecs).
  */
-public class RawSnappyCodec implements Configurable, CompressionCodec {
+public class SnappyCodec implements Configurable, CompressionCodec {
   /** Configuration key for the Snappy stream buffer size */
   public static final String SNAPPY_STREAM_BUFFER_SIZE_KEY = "snappy.stream.buffer.size";
   // What should the right size be?  I'd expect it should be tied to the page size, but setting
   // it too small can cause some map tasks to fail.
   /** Default value for Snappy stream buffer size is 10x the default Parquet page size */
-  public static final int DEFAULT_SNAPPY_STREAM_BUFFER_SIZE = 10 * ParquetWriter.DEFAULT_PAGE_SIZE;
+  public static final int DEFAULT_SNAPPY_STREAM_BUFFER_SIZE = 2 * ParquetWriter.DEFAULT_PAGE_SIZE;
 
   Configuration conf;
 
@@ -75,10 +75,10 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
    * @throws IOException
    */
   @Override
-  public CompressionOutputStream createOutputStream(OutputStream out,
-      Compressor compressor) throws IOException {
+  public CompressionOutputStream createOutputStream(OutputStream out, Compressor compressor)
+      throws IOException {
     int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
-    return new CompressorStream(out, compressor, bufferSize);
+    return new SnappyCompressorStream(out, bufferSize);
   }
 
   /**
@@ -100,6 +100,7 @@ public class RawSnappyCodec implements Configurable, CompressionCodec {
   public Compressor createCompressor() {
     int bufferSize = conf.getInt(SNAPPY_STREAM_BUFFER_SIZE_KEY, DEFAULT_SNAPPY_STREAM_BUFFER_SIZE);
     return new SnappyCompressor(bufferSize);
+//    return new SnappyCompressor(); // SWITCH
   }
 
   /**
